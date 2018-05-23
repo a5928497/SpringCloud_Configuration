@@ -1,11 +1,66 @@
+spring: 
+    profiles: 
+        active:
+           - dev
+---
 server:
-  port: 7001
+  port: 8001
+
+mybatis:
+  config-location: classpath:mybatis/mybatis.cfg.xml
+  type-aliases-package: com.lzl.entity
+  mapper-locations:
+  - classpath:mybatis/mapper/**/*.xml
+spring:
+  profiles: dev
+  application:
+    name: microservicecloud-dept   #为这个服务取名，非常重要！！！！！
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: org.gjt.mm.mysql.Driver
+    url: jdbc:mysql://192.168.88.246:3306/cloudDB01
+    username: root
+    password: 123456
+    dbcp2:
+      min-idle: 5         #最小连接数
+      initial-size: 5    #初始化连接数
+      max-total: 10      #最大连接数
+      max-wait-millis: 200  #等待连接最长的超时时间
 eureka:
-  instance:
-    hostname: eureka7001.com    #hostname为hosts文件中映射的地址
   client:
-    register-with-eureka: false     #false表示不向注册中心注册自己
-    fetch-registry: false           #false表示自己就是注册中心，职责是维护实例，不参加检索
     service-url:
-      #defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/    #设置eureka server的交互地址
-      defaultZone: http://eureka7001.com:7001/eureka  #其他两个服务端的地址
+      defaultZone: http://eureka7001.com:7001/eureka/
+  instance:
+    instance-id: dept8001
+    prefer-ip-address: true
+---
+server:
+  port: 8001
+
+mybatis:
+  config-location: classpath:mybatis/mybatis.cfg.xml
+  type-aliases-package: com.lzl.entity
+  mapper-locations:
+  - classpath:mybatis/mapper/**/*.xml
+spring:
+  profiles: test
+  application:
+    name: microservicecloud-dept   #为这个服务取名，非常重要！！！！！
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: org.gjt.mm.mysql.Driver
+    url: jdbc:mysql://192.168.88.246:3306/cloudDB02
+    username: root
+    password: 123456
+    dbcp2:
+      min-idle: 5         #最小连接数
+      initial-size: 5    #初始化连接数
+      max-total: 10      #最大连接数
+      max-wait-millis: 200  #等待连接最长的超时时间
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/
+  instance:
+    instance-id: dept8001
+    prefer-ip-address: true
